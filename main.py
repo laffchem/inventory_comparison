@@ -13,7 +13,7 @@ mrf_df.sort_values(by="UPC", inplace=True)
 
 merged_df = pd.merge(snf_df, mrf_df, on="UPC", suffixes=("_snf", "_mrf"))
 
-merged_df["QtyChange"] = merged_df["QtyAvailable_mrf"] - merged_df["QtyAvailable_sof"]
+merged_df["QtyChange"] = merged_df["QtyAvailable_mrf"] - merged_df["QtyAvailable_snf"]
 
 merged_df["ChangeStatus"] = "No Change"
 merged_df.loc[merged_df["QtyChange"] > 0, "ChangeStatus"] = "Quantity Increase"
