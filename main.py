@@ -23,10 +23,24 @@ filtered_df["QtyChange"] = (
     filtered_df["QtyAvailable_mrf"] - filtered_df["QtyAvailable_snf"]
 )
 
+filtered_df["PercentageChange"] = (
+    (
+        (
+            (filtered_df["QtyAvailable_mrf"] - filtered_df["QtyAvailable_snf"])
+            / filtered_df["QtyAvailable_snf"]
+        )
+        * 100
+    )
+    .round(2)
+    .map("{:.2f}%".format)
+)
+
 filtered_df.loc[:, "ChangeStatus"] = "No Change"
 filtered_df.loc[filtered_df["QtyChange"] > 0, "ChangeStatus"] = "Quantity Increase"
 filtered_df.loc[filtered_df["QtyChange"] < 0, "ChangeStatus"] = "Quantity Decrease"
 
-final_df = filtered_df[["UPC", "QtyAvailable_snf", "QtyAvailable_mrf", "ChangeStatus"]]
+final_df = filtered_df[
+    ["UPC", "QtyAvailable_snf", "QtyAvailable_mrf", "ChangeStatus", "PercentageChange"]
+]
 
-final_df.to_csv("./comparisons/comparison.csv")
+final_df.to_csv("./inventory_comparisons/comparison.csv")
