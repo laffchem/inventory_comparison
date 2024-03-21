@@ -1,1 +1,1 @@
-This is where your comparisons will go.
+Any inventory comparisons will be in this directory.
