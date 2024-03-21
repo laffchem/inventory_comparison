@@ -149,7 +149,7 @@ def parse_directory_of_edi_files_for_upcs(folder_name):
         for item in products:
             csv_data.append([item])
         with open(
-            os.path.join("..", "edi_to_csv", csv_file_name), "w", newline=""
+            os.path.join("..", "batch_edi_to_csv", csv_file_name), "w", newline=""
         ) as file:
             writer = csv.writer(file)
             writer.writerow(csv_data[0])
