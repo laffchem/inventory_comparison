@@ -8,13 +8,15 @@ pd.options.mode.copy_on_write = True  # This creates a copy in memory instead of
 
 # Note - of = older file | nf = newer file
 # Comparing 2 Files -- Note you have to provide an output filename... Not the .csv part though
-def compare_inventory_files(outputFileName):
+def compare_inventory_files():
     older_file = input(
         "Input the name of the older inventory file. Copy and paste it...\n"
     )
     newer_file = input(
         "Input the name of the newer inventory file. Copy and paste it...\n"
     )
+
+    output_file_name = f"{older_file.replace('.csv', '')}_{newer_file.replace('.csv', '')}_inv_comparisons"
 
     of_df = pd.read_csv(older_file)
     nf_df = pd.read_csv(newer_file)
@@ -56,18 +58,20 @@ def compare_inventory_files(outputFileName):
         ]
     ]
 
-    final_df.to_csv(f"./inventory_comparisons/{outputFileName}.csv")
-    print("Output file written to inventory_comparisons directory...")
+    final_df.to_csv(f"./inventory_comparisons/{output_file_name}.csv")
+    print("Output file written to <inventory_comparisons> directory...")
 
 
 # Comparing 2 Files for missing upcs -- Note you have to provide an output filename... Not the .csv part though
-def find_missing_upcs_from_two_files(outputFileName):
+def find_missing_upcs_from_two_files():
     older_file = input(
         "Input the name of the older inventory file. Copy and paste it...\n"
     )
     newer_file = input(
-        "Input the name of the newer inventory file. Copy and paste it..."
+        "Input the name of the newer inventory file. Copy and paste it...\n"
     )
+
+    output_file_name = f"{older_file.replace('.csv', '')}_{newer_file.replace('.csv', '')}_missing_UPCs"
 
     of_df = pd.read_csv(older_file)
     nf_df = pd.read_csv(newer_file)
@@ -90,8 +94,8 @@ def find_missing_upcs_from_two_files(outputFileName):
         )
     )
 
-    missing_upcs_df.to_csv(f"./upc_comparisons/{outputFileName}.csv")
-    print("Output file written to upc_comparisons directory...")
+    missing_upcs_df.to_csv(f"./upc_comparisons/{output_file_name}.csv")
+    print("Output file written to <upc_comparisons> directory...")
 
 
 def count_rows_of_inventory_file():
@@ -110,7 +114,7 @@ def get_product_upc(item):
     return item[start:end]
 
 
-def parse_edi_files_for_upcs(edi_file_name):
+def parse_edi_file_for_upcs(edi_file_name):
     products = ["UPC"]
     with open(edi_file_name, "r") as file:
         lines = file.readlines()
@@ -127,6 +131,9 @@ def parse_edi_files_for_upcs(edi_file_name):
         writer.writerow(csv_data[0])
         for row in csv_data[1:]:
             writer.writerow(row)
+    print(
+        f"Edi file was converted to csv <{csv_file_name}> in <edi_to_csv> directory..."
+    )
 
 
 def parse_directory_of_edi_files_for_upcs(folder_name):
@@ -155,6 +162,7 @@ def parse_directory_of_edi_files_for_upcs(folder_name):
             writer.writerow(csv_data[0])
             for row in csv_data[1:]:
                 writer.writerow(row)
+    print("Batch of edi files converted to csv are in <batch_edi_to_csv> directory...")
 
 
 def choose_option():
@@ -171,14 +179,12 @@ def choose_option():
 def run_program(choice):
     match choice:
         case 1:
-            return compare_inventory_files("output")
+            return compare_inventory_files()
 
         case 2:
-            return find_missing_upcs_from_two_files("output")
+            return find_missing_upcs_from_two_files()
         case 3:
-            return parse_edi_files_for_upcs(
-                input("Input the edi file name.\n") + ".edi"
-            )
+            return parse_edi_file_for_upcs(input("Input the edi file name.\n"))
         case 4:
             return count_rows_of_inventory_file()
         case 5:
